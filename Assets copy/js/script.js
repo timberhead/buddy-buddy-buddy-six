@@ -29,7 +29,7 @@ function currentCondition(city) {
 
         var iconCode = currentWeather.weather.icon;
 
-        var iconURL = `https://api.weatherbit.io/v2.0/img/w/${iconCode}.png`;
+        var iconURL = `https://www.weatherbit.io/static/img/icons/${iconCode}.png`;
 
         // WHEN I view current weather conditions for that city
         // THEN I am presented with the city name
@@ -110,7 +110,7 @@ function futureCondition(city) {
         // $("#fiveDay").empty();
         $("#dateTime").text(futureResponse.data[0].datetime)
 
-        for (let i = 0; i < futureResponse.data.length; i++) {
+        for (let i = 1; i < 6; i++) {
             // var cityInfo = {
             //     date: futureResponse.data[i].datetime,
             //     icon: futureResponse.data[i].weather.icon,
@@ -120,38 +120,38 @@ function futureCondition(city) {
 
             console.log(futureResponse.data);
 
-            var currDate = moment.unix(cityInfo.date).format("MM/DD/YYYY");
-            // var iconURL = `<img src="https://api.weatherbit.io/v2.0/img/w/${iconCode}.png"`;
-
+            // var currDate = moment.unix(cityInfo.date).format("MM/DD/YYYY");
+            // var iconURL = `<img src="https://www.weatherbit.io/static/img/icons/${iconCode}.png"`;
+console.log(futureResponse.data[i])
             // displays the date
             // an icon representation of weather conditions
             // the temperature
             // the humidity
-            // var futureCard = $(`
+            var futureCard = $(`
+                <div class="pl-3">
+                    <div class="card pl-3 pt-3 mb-3 bg-primary text-light" style="width: 12rem;>
+                        <div class="card-body">
+                            <h5>${futureResponse.data[i].datetime}</h5>
+
+                            <p>Temp: ${futureResponse.data[i].high_temp} °F</p>
+                            <p>Humidity: ${futureResponse.data[i].rh}\%</p>
+                        </div>
+                    </div>
+                <div>
+            `);
+            $("#fiveDay").append(futureCard)
+            //     $("#fiveDay").append($(`
             //     <div class="pl-3">
-            //         <div class="card pl-3 pt-3 mb-3 bg-primary text-light" style="width: 12rem;>
+            //         <div class="card pl-3 pt-3 mb-3 bg-primary text-light" style="width: 12rem;">
             //             <div class="card-body">
             //                 <h5>${futureResponse.data[i].datetime}</h5>
-                             
+
             //                 <p>Temp: ${futureResponse.data[i].high_temp} °F</p>
             //                 <p>Humidity: ${futureResponse.data[i].rh}\%</p>
             //             </div>
             //         </div>
             //     <div>
-            // `);
-
-        //     $("#fiveDay").append($(`
-        //     <div class="pl-3">
-        //         <div class="card pl-3 pt-3 mb-3 bg-primary text-light" style="width: 12rem;">
-        //             <div class="card-body">
-        //                 <h5>${futureResponse.data[i].datetime}</h5>
-                         
-        //                 <p>Temp: ${futureResponse.data[i].high_temp} °F</p>
-        //                 <p>Humidity: ${futureResponse.data[i].rh}\%</p>
-        //             </div>
-        //         </div>
-        //     <div>
-        // `));
+            // `));
         }
     });
 }

@@ -107,38 +107,40 @@ function futureCondition(city) {
         method: "GET"
     }).then(function (futureResponse) {
         console.log(futureResponse);
-        // $("#fiveDay").empty();
+        $("#fiveDay").empty();
         $("#dateTime").text(futureResponse.data[0].datetime)
 
-        for (let i = 1; i < 6; i++) {
-            // var cityInfo = {
-            //     date: futureResponse.data[i].datetime,
-            //     icon: futureResponse.data[i].weather.icon,
-            //     temp: futureResponse.data[i].high_temp,
-            //     humidity: futureResponse.data[i].rh,
-            // };
+        for (let i = 0; i < 5; i++) {
+            var cityInfo = {
+                date: futureResponse.data[i].datetime,
+                icon: futureResponse.data[i].weather.icon,
+                temp: futureResponse.data[i].high_temp,
+                humidity: futureResponse.data[i].rh,
+            };
 
             console.log(futureResponse.data);
 
             // var currDate = moment.unix(cityInfo.date).format("MM/DD/YYYY");
-            // var iconURL = `<img src="https://www.weatherbit.io/static/img/icons/${iconCode}.png"`;
-console.log(futureResponse.data[i])
+            var iconURL = `<img src="https://www.weatherbit.io/static/img/icons/${futureResponse.data[i].weather.icon}.png">`;
+            console.log(futureResponse.data[i])
             // displays the date
             // an icon representation of weather conditions
             // the temperature
             // the humidity
             var futureCard = $(`
                 <div class="pl-3">
-                    <div class="card pl-3 pt-3 mb-3 bg-primary text-light" style="width: 12rem;>
+                    <div class="card pl-3 pt-3 mb-3 bg-primary text-light style=width: 12rem";>
                         <div class="card-body">
                             <h5>${futureResponse.data[i].datetime}</h5>
-
+                            ${iconURL}  
                             <p>Temp: ${futureResponse.data[i].high_temp} °F</p>
                             <p>Humidity: ${futureResponse.data[i].rh}\%</p>
+                            <p>Wind Speed: ${futureResponse.data[i].wind_spd}mph</p>
                         </div>
                     </div>
                 <div>
             `);
+
             $("#fiveDay").append(futureCard)
             //     $("#fiveDay").append($(`
             //     <div class="pl-3">
@@ -163,17 +165,42 @@ $("#searchBtn").on("click", function (event) {
     var city = $("#enterCity").val().trim();
     currentCondition(city);
     futureCondition(city);
-    if (!searchHistoryList.includes(city)) {
-        searchHistoryList.push(city);
-        var searchedCity = $(`
-            <li class="list-group-item">${city}</li>
-            `);
-        $("#searchHistory").append(searchedCity);
-    };
+    addToHistory(city);
+
+    // if (!searchHistoryList.includes(city)) {
+    //     searchHistoryList.push(city);
+    //     var searchedCity = $(`
+    //         <li class="list-group-item">${city}</li>
+    //         `);
+    //     $("#searchHistory").append(searchedCity);
+    // };
 
     localStorage.setItem("city", JSON.stringify(searchHistoryList));
     console.log(searchHistoryList);
 });
+
+function showHistory() {
+    $("#searchHistory").empty()
+    for (var i = searchHistoryList.length - 1; i > searchHistoryList.length - 6; i--) {
+        var searchedCity = $(`
+            <li class="list-group-item">${searchHistoryList[i]}</li>
+            `);
+        $("#searchHistory").append(searchedCity);
+    }
+
+}
+
+function addToHistory(city) {
+    if (!searchHistoryList.includes(city)) {
+        searchHistoryList.push(city);
+
+    };
+
+    localStorage.setItem("city", JSON.stringify(searchHistoryList));
+    console.log(searchHistoryList);
+    showHistory()
+}
+
 
 // WHEN I click on a city in the search history
 // THEN I am again presented with current and future conditions for that city
@@ -189,7 +216,7 @@ $(document).on("click", ".list-group-item", function () {
 // THEN I am presented with the last searched city forecast
 $(document).ready(function () {
     var searchHistoryArr = JSON.parse(localStorage.getItem("city"));
-
+    
     if (searchHistoryArr !== null) {
         searchHistoryList = searchHistoryArr
         var lastSearchedIndex = searchHistoryList.length - 1;
@@ -197,6 +224,9 @@ $(document).ready(function () {
         currentCondition(lastSearchedCity);
         console.log(`Last searched city: ${lastSearchedCity}`);
     }
+
+showHistory()
+
 });
 
 
